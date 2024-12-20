@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.raspberry_pi_project.R;
+import com.example.raspberry_pi_project.domain.Timer;
 import com.example.raspberry_pi_project.view.viewmodel.MainViewModel;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 
@@ -31,18 +32,12 @@ public class MainActivity extends AppCompatActivity {
         CircleProgress progress = findViewById(R.id.circle_progress);
         ImageButton button = findViewById(R.id.toggleBtn);
 
-        button.setOnClickListener(v -> {
-            if (viewModel.isOpened()) {
-                return;
-            }
-            viewModel.sendOpenEvent();
-        });
+        Timer timer = viewModel.getTimer();
 
-        viewModel.getRemainingTime().observe(this, remainingTime -> {
-            if (remainingTime < 0) {
-                remainingTime = 0;
-            }
-            progress.setProgress(remainingTime);
-        });
+        timer.observe(this, remainingTime ->
+                progress.setProgress(remainingTime < 0 ? 0 : remainingTime)
+        );
+
+        button.setOnClickListener(v -> viewModel.toggleServo());
     }
 }
