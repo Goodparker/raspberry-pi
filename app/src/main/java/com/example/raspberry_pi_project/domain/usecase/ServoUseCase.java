@@ -1,9 +1,7 @@
 package com.example.raspberry_pi_project.domain.usecase;
 
-import com.example.raspberry_pi_project.domain.Timer;
-import com.example.raspberry_pi_project.domain.TimerManager;
-import com.example.raspberry_pi_project.domain.entities.TimerEvent;
-import com.google.gson.Gson;
+import com.example.raspberry_pi_project.domain.common.timer.Timer;
+import com.example.raspberry_pi_project.domain.common.timer.TimerManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -26,15 +24,23 @@ public class ServoUseCase {
         Request req = new Request.Builder()
                 .url(WS_URL)
                 .build();
-        manager = new TimerManager(timer);
+        TimerManager manager = getTimerManager(timer);
         if (webSocket == null) {
             webSocket = client.newWebSocket(req, manager);
         }
+        manager.sendStartEvent(webSocket);
+    }
+
+    private TimerManager getTimerManager(Timer timer) {
+        if (manager == null) {
+            manager = new TimerManager(timer);
+        }
+        return manager;
     }
 
     public Timer getTimer() {
         if (timer == null) {
-            timer = new Timer(0);
+            timer = new Timer();
         }
         return timer;
     }

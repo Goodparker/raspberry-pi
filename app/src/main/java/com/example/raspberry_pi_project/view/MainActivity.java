@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.raspberry_pi_project.R;
-import com.example.raspberry_pi_project.domain.Timer;
+import com.example.raspberry_pi_project.domain.common.timer.Timer;
 import com.example.raspberry_pi_project.view.viewmodel.MainViewModel;
 import com.github.lzyzsd.circleprogress.CircleProgress;
 

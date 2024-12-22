@@ -2,7 +2,7 @@ package com.example.raspberry_pi_project.view.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.example.raspberry_pi_project.domain.Timer;
+import com.example.raspberry_pi_project.domain.common.timer.Timer;
 import com.example.raspberry_pi_project.domain.usecase.ServoUseCase;
 
 import javax.inject.Inject;

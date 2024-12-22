@@ -5,7 +5,6 @@ import com.example.raspberry_pi_project.domain.usecase.ServoUseCase;
 import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
-import dagger.hilt.android.components.ActivityComponent;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
 
