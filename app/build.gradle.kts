@@ -49,4 +49,11 @@ dependencies {
     implementation("com.github.lzyzsd:circleprogress:1.2.4") {
         exclude(group = "com.android.support", module = "support-compat")
     }
+    // https://mvnrepository.com/artifact/org.mockito/mockito-core
+    testImplementation("org.mockito:mockito-core:5.14.2")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.42")
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation("org.mockito:mockito-core:5.14.2")
 }
