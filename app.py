@@ -4,6 +4,17 @@ import asyncio
 from enum import Enum
 from fastapi import FastAPI, WebSocket
 from typing import Any, Coroutine
+import RPi.GPIO as GPIO
+
+PWM_GPIO_PIN = 16
+
+GPIO.setwarnings(False)
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(PWM_GPIO_PIN, GPIO.OUT)
+
+pwm = GPIO.PWM(PWM_GPIO_PIN, 50)
+pwm.start(7.5)
+pwm_lock = asyncio.Lock()
 
 
 class EventType(Enum):
@@ -45,6 +56,12 @@ class AsyncTimer:
         self._on_stop_hook = on_stop_hook
         if self.task and not self.task.done():
             self.task.cancel()
+        else:
+            await pwm_lock.acquire()
+            try:
+                pwm.ChangeDutyCycle(2.5)
+            finally:
+                pwm_lock.release()
         self.task = asyncio.create_task(self._countdown(on_stop_hook))
 
     async def reset(self):
@@ -103,17 +120,13 @@ async def ws_servo_endpoint(websocket: WebSocket):
             sockets.remove(websocket)
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-
-async def toggle_servo():
-    pass
-
-
 async def send_stop_events():
-    stop_event = TimerEvent(EventType.STOP)
-    logger.info("Send stop event")
-    for ws in sockets:
-        await ws.send_text(json.dumps(stop_event, cls=TimerEventEncoder))
+    await pwm_lock.acquire()
+    try:
+        pwm.ChangeDutyCycle(7.5)
+        stop_event = TimerEvent(EventType.STOP)
+        logger.info("Send stop event")
+        for ws in sockets:
+            await ws.send_text(json.dumps(stop_event, cls=TimerEventEncoder))
+    finally:
+        pwm_lock.release()
